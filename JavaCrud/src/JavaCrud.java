@@ -19,6 +19,7 @@ import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import com.toedter.calendar.JDateChooser;
 
 public class JavaCrud {
 
@@ -323,5 +324,9 @@ public class JavaCrud {
 				});
 				btnDelete.setBounds(805, 454, 107, 50);
 				frame.getContentPane().add(btnDelete);
+				
+				JDateChooser dateChooser = new JDateChooser();
+				dateChooser.setBounds(516, 491, 113, 53);
+				frame.getContentPane().add(dateChooser);
 			}
 }
