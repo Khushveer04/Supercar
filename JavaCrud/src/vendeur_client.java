@@ -184,7 +184,7 @@ public class vendeur_client {
 		dropsex.setBounds(160, 91, 211, 21);
 		panel.add(dropsex);
 		
-		dropsex.addItem(" ");
+		dropsex.addItem("");
 		dropsex.addItem("Homme");
 		dropsex.addItem("Femme");
 		
@@ -192,11 +192,10 @@ public class vendeur_client {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{			
-				String nom,prenom,adresse,email,numero_telephone,num_id;
-				Object sex;
+				String nom,prenom,adresse,email,numero_telephone,num_id,sex;
 				nom = txtnom.getText();
 				prenom = txtprenom.getText();
-				sex = dropsex.getSelectedItem();
+				sex = dropsex.getSelectedItem().toString();
 				adresse = txtadresse.getText();
 				email = txtemail.getText();
 				numero_telephone = txttelephone.getText();
@@ -239,6 +238,10 @@ public class vendeur_client {
 						    	JOptionPane.showMessageDialog(null, "L`insertion du prenom n`est pas bon");
 						    }
 						    
+						    if (sex.equals("")) {
+						    	JOptionPane.showMessageDialog(null, "L`insertion du sex n'est pas bon");
+						    }
+						    
 						    if( ADRESSE_PATTERN.matcher(adresse).matches()  == false) {
 						    	JOptionPane.showMessageDialog(null, "L`insertion de l'adresse n`est pas bon");
 						    }
@@ -257,7 +260,7 @@ public class vendeur_client {
 						   
 							
 							if (NOM_PATTERN.matcher(nom).matches()&&
-									PRENOM_PATTERN.matcher(prenom).matches() &&
+									PRENOM_PATTERN.matcher(prenom).matches() && !sex.equals("") &&
 					                ADRESSE_PATTERN.matcher(adresse).matches()&&
 					                EMAIL_PATTERN.matcher(email).matches()&&
 					                NUMERO_TELEPHONE_PATTERN.matcher(numero_telephone).matches() && 
@@ -269,7 +272,7 @@ public class vendeur_client {
 						pst = con.prepareStatement("insert into vendeur_client(nom,prenom,sex,adresse,email,numero_telephone,num_id)values(?,?,?,?,?,?,?)");
 						pst.setString(1, nom);
 						pst.setString(2, prenom);
-						pst.setString(3, (String) sex);
+						pst.setString(3, sex);
 						pst.setString(4, adresse);
 						pst.setString(5, email);
 						pst.setString(6, numero_telephone);
@@ -363,7 +366,7 @@ public class vendeur_client {
 			              
 			                String nom = rs.getString(1);
 			                String prenom = rs.getString(2);
-			                Object sex = rs.getObject(3);
+			                String sex = rs.getString(3);
 			                String adresse = rs.getString(4);
 			                String email = rs.getString(5);
 			                String numero_telephone = rs.getString(6);
@@ -439,12 +442,11 @@ public class vendeur_client {
 		btnUpdate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				String nom,prenom,adresse,email,numero_telephone,num_id,id;
-				Object sex;
+				String nom,prenom,adresse,email,numero_telephone,num_id,id, sex;
 				
 				nom = txtnom.getText();
 				prenom = txtprenom.getText();
-				sex = dropsex.getSelectedItem();
+				sex = dropsex.getSelectedItem().toString();
 				adresse = txtadresse.getText();
 				email = txtemail.getText();
 				numero_telephone = txttelephone.getText();
@@ -455,7 +457,7 @@ public class vendeur_client {
 						pst = con.prepareStatement("update vendeur_client set nom= ?,prenom=?,sex=?,adresse= ?,email=?,numero_telephone=?,num_id=? where id =?");
 						pst.setString(1, nom);
 			            pst.setString(2, prenom);
-			            pst.setObject(3, (String) sex);
+			            pst.setObject(3, sex);
 			            pst.setString(4, adresse);
 			            pst.setString(5, email);
 			            pst.setString(6, numero_telephone);

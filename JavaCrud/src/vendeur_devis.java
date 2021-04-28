@@ -193,13 +193,14 @@ public class vendeur_devis {
 		JComboBox dropcarbu = new JComboBox();
 		dropcarbu.setBounds(160, 107, 211, 21);
 		panel.add(dropcarbu);
-		
+		dropcarbu.addItem("");
 		dropcarbu.addItem("Essence");
 		dropcarbu.addItem("Diesel");
 		
 		JComboBox droptrans = new JComboBox();
 		droptrans.setBounds(160, 143, 211, 21);
 		panel.add(droptrans);
+		droptrans.addItem("");
 		droptrans.addItem("Manuel");
 		droptrans.addItem("Automatique");
 		droptrans.addItem("Septronique");
@@ -207,12 +208,14 @@ public class vendeur_devis {
 		JComboBox dropoption = new JComboBox();
 		dropoption.setBounds(160, 171, 211, 21);
 		panel.add(dropoption);
+		dropoption.addItem("");
 		dropoption.addItem("Full option");
 		dropoption.addItem("Basic option");
 		
 		JComboBox droppays = new JComboBox();
 		droppays.setBounds(160, 199, 211, 21);
 		panel.add(droppays);
+		droppays.addItem("");
 		droppays.addItem("Japon");
 		droppays.addItem("Singapore");
 		droppays.addItem("Afrique du Sud");
@@ -259,14 +262,13 @@ public class vendeur_devis {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{			
-				String voiture,couleur,devis;
-				Object carburant,transmission,option_ref,pays;
+				String voiture,couleur,devis,carburant,transmission,option_ref,pays;
 				voiture = dropvoiture.getSelectedItem().toString();
 				couleur = dropcouleur.getSelectedItem().toString();
-				carburant = dropcarbu.getSelectedItem();
-				transmission = droptrans.getSelectedItem();
-				option_ref = dropoption.getSelectedItem();
-				pays = droppays.getSelectedItem();
+				carburant = dropcarbu.getSelectedItem().toString();
+				transmission = droptrans.getSelectedItem().toString();
+				option_ref = dropoption.getSelectedItem().toString();
+				pays = droppays.getSelectedItem().toString();
 				devis = txtdevis.getText();
 							
 				 try {
@@ -279,17 +281,17 @@ public class vendeur_devis {
 					    JOptionPane.showMessageDialog(null, "L`insertion du couleur n`est pas bon");
 					}
 					
-					if (COULEUR_PATTERN.matcher(couleur).matches()) 
+					if (COULEUR_PATTERN.matcher(couleur).matches() && !carburant.equals("") && !transmission.equals("") && !option_ref.equals("") && !pays.equals("")) 
 					{
 					 
 					 
 					pst = con.prepareStatement("insert into vendeur_devis(voiture,couleur,carburant,transmission,option_ref,pays,devis)values(?,?,?,?,?,?,?)");
 					pst.setString(1, voiture);
 					pst.setString(2, couleur);
-					pst.setString(3, (String) carburant);
-					pst.setString(4, (String) transmission);
-					pst.setString(5, (String) option_ref);
-					pst.setString(6, (String) pays);
+					pst.setString(3, carburant);
+					pst.setString(4, transmission);
+					pst.setString(5, option_ref);
+					pst.setString(6, pays);
 					pst.setString(7, devis);
 					pst.executeUpdate();
 					JOptionPane.showMessageDialog(null, "Record Added!");
@@ -315,10 +317,10 @@ public class vendeur_devis {
 				
 				 	voiture = dropvoiture.getSelectedItem().toString();
 				 	couleur = dropcouleur.getSelectedItem().toString();
-					carburant = dropcarbu.getSelectedItem();
-					transmission = droptrans.getSelectedItem();
-					option_ref = dropoption.getSelectedItem();
-					pays = droppays.getSelectedItem();
+					carburant = dropcarbu.getSelectedItem().toString();
+					transmission = droptrans.getSelectedItem().toString();
+					option_ref = dropoption.getSelectedItem().toString();
+					pays = droppays.getSelectedItem().toString();
 					devis = txtdevis.getText();
 					
 					JFileChooser dialog = new JFileChooser();
@@ -442,12 +444,12 @@ public class vendeur_devis {
 			            if(rs.next()==true)
 			            {
 			              
-			                Object voiture = rs.getObject(1);
-			                Object couleur = rs.getObject(2);
-			                Object carburant = rs.getObject(3);
-			                Object transmission = rs.getObject(4);
-			                Object option_ref = rs.getObject(5);
-			                Object pays = rs.getObject(6);
+			            	String voiture = rs.getString(1);
+			                String couleur = rs.getString(2);
+			                String carburant = rs.getString(3);
+			                String transmission = rs.getString(4);
+			                String option_ref = rs.getString(5);
+			                String pays = rs.getString(6);
 			                String devis = rs.getString(7);
 			                
 			                dropvoiture.setSelectedItem(voiture);
@@ -485,15 +487,14 @@ public class vendeur_devis {
 		btnUpdate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				String voiture,couleur,devis,id;
-				Object carburant, transmission, option_ref,pays;
+				String voiture,couleur,devis,id, carburant, transmission, option_ref,pays;
 				
 				voiture = dropvoiture.getSelectedItem().toString();
 				couleur = dropcouleur.getSelectedItem().toString();
-				carburant = dropcarbu.getSelectedItem();
-				transmission = droptrans.getSelectedItem();
-				option_ref = dropoption.getSelectedItem();
-				pays = droppays.getSelectedItem();
+				carburant = dropcarbu.getSelectedItem().toString();
+				transmission = droptrans.getSelectedItem().toString();
+				option_ref = dropoption.getSelectedItem().toString();
+				pays = droppays.getSelectedItem().toString();
 				devis = txtdevis.getText();
 				id  = txtid.getText();
 				
@@ -501,10 +502,10 @@ public class vendeur_devis {
 						pst = con.prepareStatement("update vendeur_devis set voiture= ?,couleur=?,carburant= ?,transmission=?,option_ref=?,pays=?,devis=? where id =?");
 						pst.setString(1, voiture);
 			            pst.setString(2, couleur);
-			            pst.setString(3, (String) carburant);
-			            pst.setString(4, (String) transmission);
-			            pst.setString(5, (String) option_ref);
-			            pst.setString(6, (String) pays);
+			            pst.setString(3, carburant);
+			            pst.setString(4, transmission);
+			            pst.setString(5, option_ref);
+			            pst.setString(6, pays);
 			            pst.setString(7, devis);
 			            pst.setString(8, id);
 			            pst.executeUpdate();
