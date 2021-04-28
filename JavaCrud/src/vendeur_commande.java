@@ -57,6 +57,16 @@ public class vendeur_commande {
 	Connection con;
 	PreparedStatement pst;
 	ResultSet rs;
+	private JTextField textField;
+	private JTextField textField_1;
+	private JTextField textField_2;
+	private JTextField textField_3;
+	private JTextField textField_4;
+	private JTextField textField_5;
+	private JTextField textField_6;
+	private JTextField textField_7;
+	private JTextField textField_8;
+	private JTextField textField_9;
 
  
 	 public void Connect()
@@ -102,44 +112,144 @@ public class vendeur_commande {
 		
 		JLabel lblNewLabel = new JLabel("COMMANDE");
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 30));
-		lblNewLabel.setBounds(552, 10, 229, 79);
+		lblNewLabel.setBounds(544, -14, 229, 79);
 		frame.getContentPane().add(lblNewLabel);
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "Registration", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel.setBounds(24, 107, 430, 223);
+		panel.setBounds(41, 163, 430, 292);
 		frame.getContentPane().add(panel);
 		panel.setLayout(null);
 		
-		JLabel lbldepot = new JLabel("Depot");
-		lbldepot.setFont(new Font("Tahoma", Font.BOLD, 14));
-		lbldepot.setBounds(24, 24, 99, 33);
-		panel.add(lbldepot);
+		JLabel lblmarque = new JLabel("Marque");
+		lblmarque.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblmarque.setBounds(24, 8, 99, 33);
+		panel.add(lblmarque);
 		
-		JLabel lblquantite = new JLabel("Quantite");
+		JLabel lblquantite = new JLabel("Modele");
 		lblquantite.setFont(new Font("Tahoma", Font.BOLD, 14));
-		lblquantite.setBounds(24, 67, 99, 33);
+		lblquantite.setBounds(24, 43, 99, 33);
 		panel.add(lblquantite);
 		
 		txtdepot = new JTextField();
-		txtdepot.setBounds(160, 32, 211, 22);
+		txtdepot.setBounds(160, 16, 211, 22);
 		panel.add(txtdepot);
 		txtdepot.setColumns(10);
 		
 		txtquantite = new JTextField();
 		txtquantite.setColumns(10);
-		txtquantite.setBounds(160, 72, 211, 22);
+		txtquantite.setBounds(160, 51, 211, 22);
 		panel.add(txtquantite);
 		
 		txtcout = new JTextField();
 		txtcout.setColumns(10);
-		txtcout.setBounds(160, 113, 211, 22);
+		txtcout.setBounds(160, 77, 211, 22);
 		panel.add(txtcout);
 		
-		JLabel Lblcout = new JLabel("Cout");
+		JLabel Lblcout = new JLabel("Capacite");
 		Lblcout.setFont(new Font("Tahoma", Font.BOLD, 14));
-		Lblcout.setBounds(24, 105, 99, 33);
+		Lblcout.setBounds(24, 69, 99, 33);
 		panel.add(Lblcout);
+		
+		textField = new JTextField();
+		textField.setColumns(10);
+		textField.setBounds(160, 101, 211, 22);
+		panel.add(textField);
+		
+		textField_1 = new JTextField();
+		textField_1.setColumns(10);
+		textField_1.setBounds(160, 123, 211, 22);
+		panel.add(textField_1);
+		
+		textField_2 = new JTextField();
+		textField_2.setColumns(10);
+		textField_2.setBounds(160, 146, 211, 22);
+		panel.add(textField_2);
+		
+		textField_3 = new JTextField();
+		textField_3.setColumns(10);
+		textField_3.setBounds(160, 167, 211, 22);
+		panel.add(textField_3);
+		
+		textField_4 = new JTextField();
+		textField_4.setColumns(10);
+		textField_4.setBounds(160, 188, 211, 22);
+		panel.add(textField_4);
+		
+		textField_5 = new JTextField();
+		textField_5.setColumns(10);
+		textField_5.setBounds(160, 208, 211, 22);
+		panel.add(textField_5);
+		
+		textField_6 = new JTextField();
+		textField_6.setColumns(10);
+		textField_6.setBounds(160, 227, 211, 22);
+		panel.add(textField_6);
+		
+		textField_7 = new JTextField();
+		textField_7.setColumns(10);
+		textField_7.setBounds(160, 249, 211, 22);
+		panel.add(textField_7);
+		
+		textField_8 = new JTextField();
+		textField_8.setColumns(10);
+		textField_8.setBounds(160, 270, 211, 22);
+		panel.add(textField_8);
+		
+		JLabel lblTransmission = new JLabel("Transmission");
+		lblTransmission.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblTransmission.setBounds(10, 86, 99, 33);
+		panel.add(lblTransmission);
+		
+		JLabel lblCarburant = new JLabel("Carburant");
+		lblCarburant.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblCarburant.setBounds(10, 112, 99, 33);
+		panel.add(lblCarburant);
+		
+		JLabel lblPays = new JLabel("Pays");
+		lblPays.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblPays.setBounds(10, 150, 99, 33);
+		panel.add(lblPays);
+		
+		JLabel lblOption = new JLabel("Option");
+		lblOption.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblOption.setBounds(10, 171, 99, 33);
+		panel.add(lblOption);
+		
+		JLabel lblEntrepot = new JLabel("Entrepot");
+		lblEntrepot.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblEntrepot.setBounds(10, 192, 99, 33);
+		panel.add(lblEntrepot);
+		
+		JLabel lblPrix = new JLabel("Prix");
+		lblPrix.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblPrix.setBounds(10, 212, 99, 33);
+		panel.add(lblPrix);
+		
+		JLabel lblQuantite = new JLabel("Quantite");
+		lblQuantite.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblQuantite.setBounds(10, 231, 99, 33);
+		panel.add(lblQuantite);
+		
+		JLabel lblCouleur = new JLabel("Couleur");
+		lblCouleur.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblCouleur.setBounds(10, 127, 99, 33);
+		panel.add(lblCouleur);
+		
+		JLabel lblNomVendeur = new JLabel("Nom vendeur");
+		lblNomVendeur.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblNomVendeur.setBounds(10, 253, 99, 33);
+		panel.add(lblNomVendeur);
+		
+		JLabel lblStatue = new JLabel("Statue");
+		lblStatue.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblStatue.setBounds(78, 259, 99, 33);
+		panel.add(lblStatue);
+		
+		textField_9 = new JTextField();
+		textField_9.setColumns(10);
+		textField_9.setBounds(160, 30, 211, 22);
+		panel.add(textField_9);
 		
 		JButton btnNewButton = new JButton("Save");
 		btnNewButton.addActionListener(new ActionListener() {
@@ -173,7 +283,7 @@ public class vendeur_commande {
 				}
 			}
 		});
-		btnNewButton.setBounds(24, 343, 107, 50);
+		btnNewButton.setBounds(63, 454, 107, 50);
 		frame.getContentPane().add(btnNewButton);
 		
 		JButton btnExit = new JButton("Exit");
@@ -182,7 +292,7 @@ public class vendeur_commande {
 				System.exit(0);
 			}
 		});
-		btnExit.setBounds(184, 343, 107, 50);
+		btnExit.setBounds(220, 454, 107, 50);
 		frame.getContentPane().add(btnExit);
 		
 		JButton btnClear = new JButton("Clear");
@@ -194,11 +304,11 @@ public class vendeur_commande {
 				txtdepot.requestFocus();
 			}
 		});
-		btnClear.setBounds(347, 343, 107, 50);
+		btnClear.setBounds(383, 454, 107, 50);
 		frame.getContentPane().add(btnClear);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(500, 115, 676, 318);
+		scrollPane.setBounds(500, 51, 676, 382);
 		frame.getContentPane().add(scrollPane);
 		
 		table = new JTable();
@@ -206,7 +316,7 @@ public class vendeur_commande {
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new TitledBorder(null, "Search", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_1.setBounds(24, 421, 430, 110);
+		panel_1.setBounds(41, 51, 430, 110);
 		frame.getContentPane().add(panel_1);
 		panel_1.setLayout(null);
 		

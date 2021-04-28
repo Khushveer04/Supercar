@@ -19,6 +19,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import net.proteanit.sql.DbUtils;
 
 import javax.swing.JTextField;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -30,15 +31,15 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 
 public class vendeur_devis {
 
 	private JFrame frame;
-	private JTextField txtmarque;
-	private JTextField txtmodele;
-	private JTextField txtcouleur;
 	private JTable table;
 	private JTextField txtid;
 
@@ -101,6 +102,35 @@ public class vendeur_devis {
 	    		e.printStackTrace();
 		  } 
 	    }
+	  
+	  @SuppressWarnings({ "rawtypes", "unchecked" })
+	  public JComboBox Test(JComboBox jc) throws SQLException {
+	  DefaultComboBoxModel theModel = (DefaultComboBoxModel) jc.getModel();
+	  PreparedStatement pst = con.prepareStatement("Select marque,modele from voitures");
+	  ResultSet rs = pst.executeQuery();
+	  theModel.removeAllElements();
+	  // theModel.addElement("");
+	  while (rs.next()) {
+	  theModel.addElement(rs.getString("marque") + " " + rs.getString("modele"));
+	  }
+	  jc.setModel(theModel);
+	  return jc;
+	  }
+	  
+	  @SuppressWarnings({ "rawtypes", "unchecked" })
+		public JComboBox Test2(JComboBox jc) throws SQLException {
+		DefaultComboBoxModel theModel = (DefaultComboBoxModel) jc.getModel();
+		PreparedStatement pst = con.prepareStatement("Select couleur from voitures");
+		ResultSet rs = pst.executeQuery();
+		theModel.removeAllElements();
+		// theModel.addElement("");
+		while (rs.next()) {
+		theModel.addElement(rs.getString("couleur"));
+		}
+		jc.setModel(theModel);
+		return jc;
+		}
+		
 	 
 	
 
@@ -120,30 +150,10 @@ public class vendeur_devis {
 		frame.getContentPane().add(panel);
 		panel.setLayout(null);
 		
-		JLabel lblmarque = new JLabel("Marque");
+		JLabel lblmarque = new JLabel("Voiture");
 		lblmarque.setFont(new Font("Tahoma", Font.BOLD, 14));
-		lblmarque.setBounds(24, 5, 99, 33);
+		lblmarque.setBounds(24, 36, 99, 33);
 		panel.add(lblmarque);
-		
-		JLabel lblmodele = new JLabel("Modele");
-		lblmodele.setFont(new Font("Tahoma", Font.BOLD, 14));
-		lblmodele.setBounds(24, 37, 99, 33);
-		panel.add(lblmodele);
-		
-		txtmarque = new JTextField();
-		txtmarque.setBounds(160, 13, 211, 22);
-		panel.add(txtmarque);
-		txtmarque.setColumns(10);
-		
-		txtmodele = new JTextField();
-		txtmodele.setColumns(10);
-		txtmodele.setBounds(160, 45, 211, 22);
-		panel.add(txtmodele);
-		
-		txtcouleur = new JTextField();
-		txtcouleur.setColumns(10);
-		txtcouleur.setBounds(160, 75, 211, 22);
-		panel.add(txtcouleur);
 		
 		JLabel Lblcouleur = new JLabel("Couleur");
 		Lblcouleur.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -213,15 +223,46 @@ public class vendeur_devis {
 		droppays.addItem("France");
 		droppays.addItem("Coree");
 		
+		
+		
+		
+		JComboBox dropcouleur = new JComboBox();
+		dropcouleur.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+			try {
+			Test2(dropcouleur);
+			} catch (SQLException e) {
+			e.printStackTrace();
+			}
+			}
+			});
+		dropcouleur.setBounds(160, 75, 211, 21);
+		panel.add(dropcouleur);
+		
+		JComboBox dropvoiture = new JComboBox();
+		dropvoiture.addMouseListener(new MouseAdapter() {
+		@Override
+		public void mousePressed(MouseEvent arg0) {
+		try {
+		Test(dropvoiture);
+		} catch (SQLException e) {
+		e.printStackTrace();
+		}
+		}
+		});
+		dropvoiture.setBounds(160, 44, 211, 21);
+		panel.add(dropvoiture);
+		
+		
 		JButton btnNewButton = new JButton("Creation");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{			
-				String marque,modele,couleur,devis;
+				String voiture,couleur,devis;
 				Object carburant,transmission,option_ref,pays;
-				marque = txtmarque.getText();
-				modele = txtmodele.getText();
-				couleur = txtcouleur.getText();
+				voiture = dropvoiture.getSelectedItem().toString();
+				couleur = dropcouleur.getSelectedItem().toString();
 				carburant = dropcarbu.getSelectedItem();
 				transmission = droptrans.getSelectedItem();
 				option_ref = dropoption.getSelectedItem();
@@ -242,30 +283,28 @@ public class vendeur_devis {
 					{
 					 
 					 
-					pst = con.prepareStatement("insert into vendeur_devis(marque,modele,couleur,carburant,transmission,option_ref,pays,devis)values(?,?,?,?,?,?,?,?)");
-					pst.setString(1, marque);
-					pst.setString(2, modele);
-					pst.setString(3, couleur);
-					pst.setString(4, (String) carburant);
-					pst.setString(5, (String) transmission);
-					pst.setString(6, (String) option_ref);
-					pst.setString(7, (String) pays);
-					pst.setString(8, devis);
+					pst = con.prepareStatement("insert into vendeur_devis(voiture,couleur,carburant,transmission,option_ref,pays,devis)values(?,?,?,?,?,?,?)");
+					pst.setString(1, voiture);
+					pst.setString(2, couleur);
+					pst.setString(3, (String) carburant);
+					pst.setString(4, (String) transmission);
+					pst.setString(5, (String) option_ref);
+					pst.setString(6, (String) pays);
+					pst.setString(7, devis);
 					pst.executeUpdate();
 					JOptionPane.showMessageDialog(null, "Record Added!");
 				 }
 					table_load();
 					
 						           
-//					txtmarque.setText("");
-//					txtmodele.setText("");
-//					txtcouleur.setText("");
-//					dropcarbu.setSelectedItem("");
-//					droptrans.setSelectedItem("");
-//					dropoption.setSelectedItem("");
-//					droppays.setSelectedItem("");
-//					txtdevis.setText("");
-//					txtmarque.requestFocus();
+					dropvoiture.setSelectedItem("");
+					dropcouleur.setSelectedItem("");
+					dropcarbu.setSelectedItem("");
+					droptrans.setSelectedItem("");
+					dropoption.setSelectedItem("");
+					droppays.setSelectedItem("");
+					txtdevis.setText("");
+					dropvoiture.requestFocus();
 				   }
 			 
 				catch (SQLException e1) 
@@ -274,9 +313,8 @@ public class vendeur_devis {
 				e1.printStackTrace();
 				}
 				
-				 	marque = txtmarque.getText();
-					modele = txtmodele.getText();
-					couleur = txtcouleur.getText();
+				 	voiture = dropvoiture.getSelectedItem().toString();
+				 	couleur = dropcouleur.getSelectedItem().toString();
 					carburant = dropcarbu.getSelectedItem();
 					transmission = droptrans.getSelectedItem();
 					option_ref = dropoption.getSelectedItem();
@@ -284,7 +322,7 @@ public class vendeur_devis {
 					devis = txtdevis.getText();
 					
 					JFileChooser dialog = new JFileChooser();
-					dialog.setSelectedFile(new File(marque+"_FicheDevis"+".pdf"));
+					dialog.setSelectedFile(new File(voiture+"_FicheDevis"+".pdf"));
 					int dialogResult = dialog.showSaveDialog(null);
 					if (dialogResult==JFileChooser.APPROVE_OPTION) {
 						String filePath = dialog.getSelectedFile().getPath();
@@ -303,8 +341,7 @@ public class vendeur_devis {
 							myDoc.add(new Paragraph(" ", FontFactory.getFont(FontFactory.HELVETICA,20)));
 							
 							myDoc.add(new Paragraph("Detail du devis", FontFactory.getFont(FontFactory.HELVETICA,15)));
-							myDoc.add(new Paragraph("Marque: "+marque+ " ", FontFactory.getFont(FontFactory.HELVETICA,15)));
-							myDoc.add(new Paragraph("Modele: "+modele+" ", FontFactory.getFont(FontFactory.HELVETICA,15)));
+							myDoc.add(new Paragraph("Marque et modele: "+voiture+ " ", FontFactory.getFont(FontFactory.HELVETICA,15)));
 							myDoc.add(new Paragraph("Couleur: "+couleur+" ", FontFactory.getFont(FontFactory.HELVETICA,15)));
 							myDoc.add(new Paragraph("Carburant: "+carburant+" ", FontFactory.getFont(FontFactory.HELVETICA,15)));
 							myDoc.add(new Paragraph("Transmission: "+transmission+" ", FontFactory.getFont(FontFactory.HELVETICA,15)));
@@ -315,15 +352,14 @@ public class vendeur_devis {
 							myDoc.close();
 							JOptionPane.showMessageDialog(null, "PDF Valider");
 							
-							txtmarque.setText("");
-							txtmodele.setText("");
-							txtcouleur.setText("");
+							dropvoiture.setSelectedItem("");
+							dropcouleur.setSelectedItem("");
 							dropcarbu.setSelectedItem("");
 							droptrans.setSelectedItem("");
 							dropoption.setSelectedItem("");
 							droppays.setSelectedItem("");
 							txtdevis.setText("");
-							txtmarque.requestFocus();
+							dropvoiture.requestFocus();
 						
 							
 							
@@ -359,15 +395,14 @@ public class vendeur_devis {
 		JButton btnClear = new JButton("Effacer");
 		btnClear.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				txtmarque.setText("");
-				txtmodele.setText("");
-				txtcouleur.setText("");
+				dropvoiture.setSelectedItem("");
+				dropcouleur.setSelectedItem("");
 				dropcarbu.setSelectedItem("");
 				droptrans.setSelectedItem("");
 				dropoption.setSelectedItem("");
 				droppays.setSelectedItem(""); 
 				txtdevis.setText(""); 
-				txtmarque.requestFocus();
+				dropvoiture.requestFocus();
 			}
 		});
 		btnClear.setBounds(347, 454, 107, 50);
@@ -400,25 +435,23 @@ public class vendeur_devis {
 			          
 			            String id = txtid.getText();
 
-			                pst = con.prepareStatement("select marque,modele,couleur,carburant,transmission,option_ref,pays,devis from vendeur_devis where id = ?");
+			                pst = con.prepareStatement("select voiture,couleur,carburant,transmission,option_ref,pays,devis from vendeur_devis where id = ?");
 			                pst.setString(1, id);
 			                ResultSet rs = pst.executeQuery();
 
 			            if(rs.next()==true)
 			            {
 			              
-			                String marque = rs.getString(1);
-			                String modele = rs.getString(2);
-			                String couleur = rs.getString(3);
-			                Object carburant = rs.getObject(4);
-			                Object transmission = rs.getObject(5);
-			                Object option_ref = rs.getObject(6);
-			                Object pays = rs.getObject(7);
-			                String devis = rs.getString(8);
+			                Object voiture = rs.getObject(1);
+			                Object couleur = rs.getObject(2);
+			                Object carburant = rs.getObject(3);
+			                Object transmission = rs.getObject(4);
+			                Object option_ref = rs.getObject(5);
+			                Object pays = rs.getObject(6);
+			                String devis = rs.getString(7);
 			                
-			                txtmarque.setText(marque);
-			                txtmodele.setText(modele);
-			                txtcouleur.setText(couleur);
+			                dropvoiture.setSelectedItem(voiture);
+			                dropcouleur.setSelectedItem(couleur);
 			                dropcarbu.setSelectedItem(carburant);
 			                droptrans.setSelectedItem(transmission);
 			                dropoption.setSelectedItem(option_ref);
@@ -428,9 +461,8 @@ public class vendeur_devis {
 			            }   
 			            else
 			            {
-			            	txtmarque.setText("");
-			            	txtmodele.setText("");
-			                txtcouleur.setText("");
+			            	dropvoiture.setSelectedItem("");
+			            	dropcouleur.setSelectedItem("");
 			                dropcarbu.setSelectedItem("");
 			            	droptrans.setSelectedItem("");
 			                dropoption.setSelectedItem("");
@@ -453,12 +485,11 @@ public class vendeur_devis {
 		btnUpdate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				String marque,modele,couleur,devis,id;
+				String voiture,couleur,devis,id;
 				Object carburant, transmission, option_ref,pays;
 				
-				marque = txtmarque.getText();
-				modele = txtmodele.getText();
-				couleur = txtcouleur.getText();
+				voiture = dropvoiture.getSelectedItem().toString();
+				couleur = dropcouleur.getSelectedItem().toString();
 				carburant = dropcarbu.getSelectedItem();
 				transmission = droptrans.getSelectedItem();
 				option_ref = dropoption.getSelectedItem();
@@ -467,29 +498,27 @@ public class vendeur_devis {
 				id  = txtid.getText();
 				
 				 try {
-						pst = con.prepareStatement("update vendeur_devis set marque= ?,modele=?,couleur=?,carburant= ?,transmission=?,option_ref=?,pays=?,devis=? where id =?");
-						pst.setString(1, marque);
-			            pst.setString(2, modele);
-			            pst.setString(3, couleur);
-			            pst.setString(4, (String) carburant);
-			            pst.setString(5, (String) transmission);
-			            pst.setString(6, (String) option_ref);
-			            pst.setString(7, (String) pays);
-			            pst.setString(8, devis);
-			            pst.setString(9, id);
+						pst = con.prepareStatement("update vendeur_devis set voiture= ?,couleur=?,carburant= ?,transmission=?,option_ref=?,pays=?,devis=? where id =?");
+						pst.setString(1, voiture);
+			            pst.setString(2, couleur);
+			            pst.setString(3, (String) carburant);
+			            pst.setString(4, (String) transmission);
+			            pst.setString(5, (String) option_ref);
+			            pst.setString(6, (String) pays);
+			            pst.setString(7, devis);
+			            pst.setString(8, id);
 			            pst.executeUpdate();
 			            JOptionPane.showMessageDialog(null, "Record Updated!");
 			            table_load();
 			           
-			            txtmarque.setText("");
-			            txtmodele.setText("");
-			            txtcouleur.setText("");
+			            dropvoiture.setSelectedItem("");
+			            dropcouleur.setSelectedItem("");
 			            dropcarbu.setSelectedItem("");
 			            droptrans.setSelectedItem("");
 			            dropoption.setSelectedItem("");
 			            droppays.setSelectedItem("");
 			            txtdevis.setText("");
-			            txtmarque.requestFocus();
+			            dropvoiture.requestFocus();
 					}
 
 		            catch (SQLException e1) {
@@ -515,15 +544,14 @@ public class vendeur_devis {
 		            JOptionPane.showMessageDialog(null, "Record Deleted!");
 		            table_load();
 		           
-		            txtmarque.setText("");
-		            txtmodele.setText("");
-		            txtcouleur.setText("");
+		            dropvoiture.setSelectedItem("");
+		            dropcouleur.setSelectedItem("");
 		            dropcarbu.setSelectedItem("");
 		            droptrans.setSelectedItem("");
 		            dropoption.setSelectedItem("");
 		            droppays.setSelectedItem("");
 		            txtdevis.setText("");
-		            txtmarque.requestFocus();
+		            dropvoiture.requestFocus();
 				}
 		
 		        catch (SQLException e1) {
