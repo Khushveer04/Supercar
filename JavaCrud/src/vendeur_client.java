@@ -92,6 +92,24 @@ public class vendeur_client {
 	    		e.printStackTrace();
 	    	 } 
 	    }
+	  
+	  //Junit test
+	  
+	  public static String testNom(String nom) {
+		  final String NOM_REGEX = "^[A-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$";
+		  final Pattern NOM_PATTERN = Pattern.compile(NOM_REGEX);
+
+		  if (NOM_PATTERN.matcher(nom).matches() == false) {
+		  JOptionPane.showMessageDialog(null, "L`insertion du nom n`est pas bon");
+		  }
+
+		  return nom;
+		  }
+
+		  public static String testPrenom(String prenom) {
+		  return prenom;
+		  }
+	
 	 
 
 	/**
@@ -204,11 +222,11 @@ public class vendeur_client {
 					 
 					 try {
 						 
-						 	final String NOM_REGEX = "^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$";
+						 	final String NOM_REGEX = "^[A-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$";
 						 
 						    final Pattern NOM_PATTERN = Pattern.compile(NOM_REGEX);
 						    
-						    final String PRENOM_REGEX = "^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$";
+						    final String PRENOM_REGEX = "^[A-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$";
 						 
 						    final Pattern PRENOM_PATTERN = Pattern.compile(PRENOM_REGEX);
 						    

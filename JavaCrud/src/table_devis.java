@@ -1,14 +1,17 @@
 import java.awt.EventQueue;
 import java.sql.*;
+
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+
 import java.awt.Font;
+
 import net.proteanit.sql.DbUtils;
+
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 
-
-public class commission {
+public class table_devis {
 
 	private JFrame frame;
 	private JTable table;
@@ -16,11 +19,11 @@ public class commission {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	public static void table_devis(){
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					commission window = new commission();
+					table_devis window = new table_devis();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -32,7 +35,7 @@ public class commission {
 	/**
 	 * Create the application.
 	 */
-	public commission() {
+	public table_devis() {
 		initialize();
 		Connect();
 		table_load();
@@ -63,7 +66,7 @@ public class commission {
 	    {
 	    	try 
 	    	{
-		    pst = con.prepareStatement("SELECT nom_vendeur as Nom, SUM(quantite) as Quantite_com, SUM(quantite) * 3500 as Total FROM vendeur_commande WHERE statue='Termine' AND MONTH(date) = MONTH(CURRENT_DATE()) AND YEAR(date) = YEAR(CURRENT_DATE()) GROUP BY nom_vendeur");
+		    pst = con.prepareStatement("select * from vendeur_devis");
 		    rs = pst.executeQuery();
 		    table.setModel(DbUtils.resultSetToTableModel(rs));
 		} 
@@ -76,24 +79,25 @@ public class commission {
 	
 
 	/**
-	 * Initialize the contents of the frame.
+	 * Initialise the contents of the frame.
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 609, 591);
+		frame.setBounds(100, 100, 1206, 591);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
-		JLabel lblNewLabel = new JLabel("Commission");
+		JLabel lblNewLabel = new JLabel("DEVIS");
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 30));
-		lblNewLabel.setBounds(204, 20, 229, 79);
+		lblNewLabel.setBounds(552, 10, 229, 79);
 		frame.getContentPane().add(lblNewLabel);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(84, 130, 458, 318);
+		scrollPane.setBounds(10, 86, 1166, 445);
 		frame.getContentPane().add(scrollPane);
 		
 		table = new JTable();
 		scrollPane.setViewportView(table);
 			}
 }
+

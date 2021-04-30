@@ -13,6 +13,7 @@ import javax.swing.border.TitledBorder;
 import net.proteanit.sql.DbUtils;
 
 import javax.swing.JTextField;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -20,18 +21,25 @@ import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 import javax.swing.JComboBox;
 
 public class vendeur_commande {
 
 	private JFrame frame;
-	private JTextField txtmarque;
-	private JTextField txtmodele;
 	private JTextField txtcapacite;
 	private JTable table;
 	private JTextField txtid;
 	private JLabel lblNoCommande ;
+	private JLabel lblNoVente ;
+	private JLabel lblNoCommandeEn;
+	private JLabel lblTotalCommandeDeja;
 	private int count = 0;
+	private int count1 = 0;
+	private int count2 = 0;
+	private int count3 = 0;
 
 	/**
 	 * Launch the application.
@@ -58,6 +66,9 @@ public class vendeur_commande {
 		initialize();
 		Connect();
 		count_load();
+		count_load_termine();
+		count_load_encours();
+		count_load_commande();
 		table_load();
 	}
 
@@ -68,6 +79,7 @@ public class vendeur_commande {
 	private JTextField txtcouleur;
 	private JTextField txtquantite;
 	private JTextField txtvendeur;
+	private JTextField txtdate;
 
 	public void Connect() {
 		try {
@@ -92,8 +104,60 @@ public class vendeur_commande {
 		} catch (Exception e) {
 		e.printStackTrace();
 		}
-		lblNoCommande.setText("No Commande :"+count);;
+		lblNoCommande.setText("Total commande : "+count);
 		}
+	
+	
+	//nombre de commande termine
+	
+	public void count_load_termine() {
+		count1 = 0;
+		try {
+		pst = con.prepareStatement("select * from vendeur_commande where statue='Termine'");
+		rs = pst.executeQuery();
+	
+		 while (rs.next()) {
+		count1++;
+		}
+		} catch (Exception e) {
+		e.printStackTrace();
+		}
+		lblNoVente.setText("Total vente conclus : "+count1);
+		}
+	
+	//nombre de commande en cours
+	
+		public void count_load_encours() {
+			count2 = 0;
+			try {
+			pst = con.prepareStatement("select * from vendeur_commande where statue='En cours'");
+			rs = pst.executeQuery();
+		
+			 while (rs.next()) {
+			count2++;
+			}
+			} catch (Exception e) {
+			e.printStackTrace();
+			}
+			lblNoCommandeEn.setText("Total commande en cours : "+count2);
+			}
+		
+		//commande deja passe
+		
+		public void count_load_commande() {
+			count3 = 0;
+			try {
+			pst = con.prepareStatement("select * from vendeur_commande where statue='commande deja passe'");
+			rs = pst.executeQuery();
+		
+			 while (rs.next()) {
+			count3++;
+			}
+			} catch (Exception e) {
+			e.printStackTrace();
+			}
+			lblTotalCommandeDeja.setText("Total commande deja passe : "+count3);
+			}
 		
 	public void table_load() {
 		try {
@@ -104,6 +168,20 @@ public class vendeur_commande {
 			e.printStackTrace();
 		}
 	}
+	
+	 @SuppressWarnings({ "rawtypes", "unchecked" })
+	  public JComboBox Test(JComboBox jc) throws SQLException {
+	  DefaultComboBoxModel theModel = (DefaultComboBoxModel) jc.getModel();
+	  PreparedStatement pst = con.prepareStatement("Select marque,modele from voitures");
+	  ResultSet rs = pst.executeQuery();
+	  theModel.removeAllElements();
+	  // theModel.addElement("");
+	  while (rs.next()) {
+	  theModel.addElement(rs.getString("marque") + " " + rs.getString("modele"));
+	  }
+	  jc.setModel(theModel);
+	  return jc;
+	  }
 
 	/**
 	 * Initialise the contents of the frame.
@@ -113,7 +191,7 @@ public class vendeur_commande {
 	@SuppressWarnings("unchecked")
 	private void initialize() throws SQLException {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 1561, 739);
+		frame.setBounds(100, 100, 1554, 820);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 
@@ -124,29 +202,9 @@ public class vendeur_commande {
 
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "Registration", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel.setBounds(41, 163, 430, 458);
+		panel.setBounds(41, 163, 430, 482);
 		frame.getContentPane().add(panel);
 		panel.setLayout(null);
-
-		JLabel lblmarque = new JLabel("Marque");
-		lblmarque.setFont(new Font("Tahoma", Font.BOLD, 14));
-		lblmarque.setBounds(24, 17, 99, 33);
-		panel.add(lblmarque);
-
-		JLabel lblmodele = new JLabel("Modele");
-		lblmodele.setFont(new Font("Tahoma", Font.BOLD, 14));
-		lblmodele.setBounds(24, 49, 99, 33);
-		panel.add(lblmodele);
-
-		txtmarque = new JTextField();
-		txtmarque.setBounds(160, 25, 211, 22);
-		panel.add(txtmarque);
-		txtmarque.setColumns(10);
-
-		txtmodele = new JTextField();
-		txtmodele.setColumns(10);
-		txtmodele.setBounds(160, 57, 211, 22);
-		panel.add(txtmodele);
 
 		txtcapacite = new JTextField();
 		txtcapacite.setColumns(10);
@@ -259,8 +317,8 @@ public class vendeur_commande {
 		dropstatue.setBounds(160, 412, 211, 21);
 		panel.add(dropstatue);
 		dropstatue.addItem("");
-		dropstatue.addItem("En attente");
 		dropstatue.addItem("Commande deja passe");
+		dropstatue.addItem("En cours");
 		dropstatue.addItem("Termine");
 
 		@SuppressWarnings("rawtypes")
@@ -287,13 +345,44 @@ public class vendeur_commande {
 		dropoption.addItem("");
 		dropoption.addItem("Full option");
 		dropoption.addItem("Basic option");
+		
+		txtdate = new JTextField();
+		txtdate.setColumns(10);
+		txtdate.setBounds(160, 443, 211, 22);
+		panel.add(txtdate);
+		
+		JLabel lblDate = new JLabel("Date");
+		lblDate.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblDate.setBounds(24, 435, 99, 33);
+		panel.add(lblDate);
+		
+		@SuppressWarnings("rawtypes")
+		JComboBox dropvoiture = new JComboBox();
+		dropvoiture.addMouseListener(new MouseAdapter() {
+		@Override
+		public void mousePressed(MouseEvent arg0) {
+		try {
+		Test(dropvoiture);
+		} catch (SQLException e) {
+		e.printStackTrace();
+		}
+		}
+		});
+		dropvoiture.setBounds(160, 58, 211, 21);
+		panel.add(dropvoiture);
+		dropvoiture.addItem("");
+		
+		JLabel lblVoiture = new JLabel("Voiture");
+		lblVoiture.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblVoiture.setBounds(24, 45, 99, 33);
+		panel.add(lblVoiture);
 
 		JButton btnNewButton = new JButton("Save");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String marque, modele, capacite, couleur, prix, quantite, nom_vendeur, carburant, transmission, option_ref, pays, lieu, statue;
-				marque = txtmarque.getText();
-				modele = txtmodele.getText();
+				String voiture, capacite, couleur, prix, quantite, nom_vendeur, carburant, transmission, option_ref, pays, lieu, statue, date;
+
+				voiture = dropvoiture.getSelectedItem().toString();
 				capacite = txtcapacite.getText();
 				transmission = droptrans.getSelectedItem().toString();
 				carburant = dropcarbu.getSelectedItem().toString();
@@ -305,10 +394,11 @@ public class vendeur_commande {
 				quantite = txtquantite.getText();
 				nom_vendeur = txtvendeur.getText();
 				statue = dropstatue.getSelectedItem().toString();
+				date = txtdate.getText();
 
 				try {
 				    
-				    final String CAPACITE_REGEX = "^[0-9]$";
+				    final String CAPACITE_REGEX = "^[0-9]{4}$";
 				    
 				    final Pattern CAPACITE_PATTERN = Pattern.compile(CAPACITE_REGEX);
 				    
@@ -316,7 +406,7 @@ public class vendeur_commande {
 					 
 				    final Pattern COULEUR_PATTERN = Pattern.compile(COULEUR_REGEX);
 				    
-				    final String PRIX_REGEX = "^[0-9]$";
+				    final String PRIX_REGEX = "^[0-9]{7}$";
 					 
 				    final Pattern PRIX_PATTERN = Pattern.compile(PRIX_REGEX);
 				    
@@ -324,22 +414,21 @@ public class vendeur_commande {
 					 
 				    final Pattern QUANTITE_PATTERN = Pattern.compile(QUANTITE_REGEX);
 				    
+				    final String NOM_VENDEUR_REGEX = "^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$";
+					 
+				    final Pattern NOM_VENDEUR_PATTERN = Pattern.compile(NOM_VENDEUR_REGEX);
+				    
+				    final String DATE_REGEX = "^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\\\\d\\\\d$";
+					 
+				    final Pattern DATE_PATTERN = Pattern.compile(DATE_REGEX);
+				    
 				   
+				    if (voiture.equals("")) {
+				    	JOptionPane.showMessageDialog(null, "L`insertion de la voiture n'est pas bon");
+				    }
 				    
 				    if (CAPACITE_PATTERN.matcher(capacite).matches() == false) {
 				    	JOptionPane.showMessageDialog(null, "L`insertion du capacite n`est pas bon");
-				    }
-				    
-				    if(COULEUR_PATTERN.matcher(couleur).matches()  == false) {
-				    	JOptionPane.showMessageDialog(null, "L`insertion du couleur n`est pas bon");
-				    }
-				    
-				    if( PRIX_PATTERN.matcher(prix).matches()  == false) {
-				    	JOptionPane.showMessageDialog(null, "L`insertion du prix n`est pas bon");
-				    }
-				    
-				    if( QUANTITE_REGEX.matcher(quantite).matches() == false) {
-				    	JOptionPane.showMessageDialog(null, "L`insertion du quantite n`est pas bon");
 				    }
 				    
 				    if (transmission.equals("")) {
@@ -350,55 +439,78 @@ public class vendeur_commande {
 				    	JOptionPane.showMessageDialog(null, "L`insertion du carburant n'est pas bon");
 				    }
 				    
-				    if (pays.equals("")) {
-				    	JOptionPane.showMessageDialog(null, "L`insertion du pays n'est pas bon");
+				    if(COULEUR_PATTERN.matcher(couleur).matches()  == false) {
+				    	JOptionPane.showMessageDialog(null, "L`insertion du couleur n`est pas bon");
 				    }
 				    
 				    if (option_ref.equals("")) {
 				    	JOptionPane.showMessageDialog(null, "L`insertion de l'option n'est pas bon");
 				    }
 				    
+				    if (pays.equals("")) {
+				    	JOptionPane.showMessageDialog(null, "L`insertion du pays n'est pas bon");
+				    }
+				    
+				    if( QUANTITE_PATTERN.matcher(quantite).matches() == false) {
+				    	JOptionPane.showMessageDialog(null, "L`insertion du quantite n`est pas bon");
+				    }
+				    
+				    if( PRIX_PATTERN.matcher(prix).matches()  == false) {
+				    	JOptionPane.showMessageDialog(null, "L`insertion du prix n`est pas bon");
+				    }
+				    
 				    if (lieu.equals("")) {
 				    	JOptionPane.showMessageDialog(null, "L`insertion du lieu n'est pas bon");
+				    }
+				    
+				    if (NOM_VENDEUR_PATTERN.matcher(nom_vendeur).matches() == false) {
+				    	JOptionPane.showMessageDialog(null, "L`insertion du nom n`est pas bon");
 				    }
 				    
 				    if (statue.equals("")) {
 				    	JOptionPane.showMessageDialog(null, "L`insertion du statue n'est pas bon");
 				    }
 				    
-				   
+				    if (DATE_PATTERN.matcher(date).matches() == false) {
+				    	JOptionPane.showMessageDialog(null, "L`insertion du date n`est pas bon");
+				    }
+				    
 				   
 					
-					if (CAPACITE_PATTERN.matcher(capacite).matches()&&
-							COULEUR_PATTERN.matcher(couleur).matches() && !transmission.equals("") && !carburant.equals("") && !pays.equals("") && !option_ref.equals("") && !lieu.equals("") && !statue.equals("") &&
+					if (!voiture.equals("") && CAPACITE_PATTERN.matcher(capacite).matches()&&
+							COULEUR_PATTERN.matcher(couleur).matches() &&
 							PRIX_PATTERN.matcher(prix).matches()&&
-							QUANTITE_REGEX.matcher(quantite).matches()) 
+							QUANTITE_PATTERN.matcher(quantite).matches() && !transmission.equals("") &&
+							!carburant.equals("") && !pays.equals("") && !option_ref.equals("") &&
+							!lieu.equals("") && NOM_VENDEUR_PATTERN.matcher(nom_vendeur).matches() && !statue.equals("") && DATE_PATTERN.matcher(date).matches()) 
 					{
 					
 					
-					pst = con.prepareStatement("insert into vendeur_commande(marque,modele,capacite,transmission,carburant,couleur,pays,option_ref,lieu,prix,quantite,nom_vendeur,statue)values(?,?,?,?,?,?,?,?,?,?,?,?,?)");
-					pst.setString(1, marque);
-					pst.setString(2, modele);
-					pst.setString(3, capacite);
-					pst.setString(4, transmission);
-					pst.setString(5, carburant);
-					pst.setString(6, couleur);
-					pst.setString(7, pays);
-					pst.setString(8, option_ref);
-					pst.setString(9, lieu);
-					pst.setString(10, prix);
-					pst.setString(11, quantite);
-					pst.setString(12, nom_vendeur);
-					pst.setString(13, statue);
+					pst = con.prepareStatement("insert into vendeur_commande(voiture,capacite,transmission,carburant,couleur,pays,option_ref,lieu,prix,quantite,nom_vendeur,statue,date)values(?,?,?,?,?,?,?,?,?,?,?,?,?)");
+					pst.setString(1, voiture);
+					pst.setString(2, capacite);
+					pst.setString(3, transmission);
+					pst.setString(4, carburant);
+					pst.setString(5, couleur);
+					pst.setString(6, pays);
+					pst.setString(7, option_ref);
+					pst.setString(8, lieu);
+					pst.setString(9, prix);
+					pst.setString(10, quantite);
+					pst.setString(11, nom_vendeur);
+					pst.setString(12, statue);
+					pst.setString(13, date);
 					pst.executeUpdate();
 					JOptionPane.showMessageDialog(null, "Record Added!");
 					}
 					count_load();
+					count_load_termine();
+					count_load_encours();
+					count_load_commande();
 					table_load();
 					
 
-					txtmarque.setText("");
-					txtmodele.setText("");
+					dropvoiture.setSelectedItem("");
 					txtcapacite.setText("");
 					droptrans.setSelectedItem("");
 					dropcarbu.setSelectedItem("");
@@ -410,7 +522,8 @@ public class vendeur_commande {
 					txtquantite.setText("");
 					txtvendeur.setText("");
 					dropstatue.setSelectedItem("");
-					txtmarque.requestFocus();
+					txtdate.setText("");
+					dropvoiture.requestFocus();
 				}
 
 				catch (SQLException e1) {
@@ -419,7 +532,7 @@ public class vendeur_commande {
 				}
 			}
 		});
-		btnNewButton.setBounds(56, 631, 107, 50);
+		btnNewButton.setBounds(53, 655, 107, 50);
 		frame.getContentPane().add(btnNewButton);
 
 		JButton btnExit = new JButton("Exit");
@@ -428,14 +541,14 @@ public class vendeur_commande {
 				System.exit(0);
 			}
 		});
-		btnExit.setBounds(218, 631, 107, 50);
+		btnExit.setBounds(217, 655, 107, 50);
 		frame.getContentPane().add(btnExit);
 
 		JButton btnClear = new JButton("Clear");
 		btnClear.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				txtmarque.setText("");
-				txtmodele.setText("");
+				
+				dropvoiture.setSelectedItem("");
 				txtcapacite.setText("");
 				droptrans.setSelectedItem("");
 				dropcarbu.setSelectedItem("");
@@ -447,10 +560,11 @@ public class vendeur_commande {
 				txtquantite.setText("");
 				txtvendeur.setText("");
 				dropstatue.setSelectedItem("");
-				txtmarque.requestFocus();
+				txtdate.setText("");
+				dropvoiture.requestFocus();
 			}
 		});
-		btnClear.setBounds(389, 631, 107, 50);
+		btnClear.setBounds(389, 655, 107, 50);
 		frame.getContentPane().add(btnClear);
 
 		JScrollPane scrollPane = new JScrollPane();
@@ -480,28 +594,27 @@ public class vendeur_commande {
 
 					String id = txtid.getText();
 
-					pst = con.prepareStatement("select marque,modele,capacite,transmission,carburant,couleur,pays,option_ref,lieu,prix,quantite,nom_vendeur,statue from vendeur_commande where id = ?");
+					pst = con.prepareStatement("select voiture,capacite,transmission,carburant,couleur,pays,option_ref,lieu,prix,quantite,nom_vendeur,statue,date from vendeur_commande where id = ?");
 					pst.setString(1, id);
 					ResultSet rs = pst.executeQuery();
 
 					if (rs.next() == true) {
 
-						String marque = rs.getString(1);
-						String modele = rs.getString(2);
-						String capacite = rs.getString(3);
-						String transmission = rs.getString(4);
-						String carburant = rs.getString(5);
-						String couleur = rs.getString(6);
-						String pays = rs.getString(7);
-						String option_ref = rs.getString(8);
-						String lieu = rs.getString(9);
-						String prix = rs.getString(10);
-						String quantite = rs.getString(11);
-						String nom_vendeur = rs.getString(12);
-						String statue = rs.getString(13);
+						String voiture = rs.getString(1);
+						String capacite = rs.getString(2);
+						String transmission = rs.getString(3);
+						String carburant = rs.getString(4);
+						String couleur = rs.getString(5);
+						String pays = rs.getString(6);
+						String option_ref = rs.getString(7);
+						String lieu = rs.getString(8);
+						String prix = rs.getString(9);
+						String quantite = rs.getString(10);
+						String nom_vendeur = rs.getString(11);
+						String statue = rs.getString(12);
+						String date = rs.getString(13);
 
-						txtmarque.setText(marque);
-						txtmodele.setText(modele);
+						dropvoiture.setSelectedItem(voiture);
 						txtcapacite.setText(capacite);
 						droptrans.setSelectedItem(transmission);
 						dropcarbu.setSelectedItem(carburant);
@@ -513,11 +626,12 @@ public class vendeur_commande {
 						txtquantite.setText(quantite);
 						txtvendeur.setText(nom_vendeur);
 						dropstatue.setSelectedItem(statue);
-						txtmarque.requestFocus();
+						txtdate.setText(date);
+						dropvoiture.requestFocus();
 
 					} else {
-						txtmarque.setText("");
-						txtmodele.setText("");
+						
+						dropvoiture.setSelectedItem("");
 						txtcapacite.setText("");
 						droptrans.setSelectedItem("");
 						dropcarbu.setSelectedItem("");
@@ -529,7 +643,8 @@ public class vendeur_commande {
 						txtquantite.setText("");
 						txtvendeur.setText("");
 						dropstatue.setSelectedItem("");
-						txtmarque.requestFocus();
+						txtdate.setText("");
+						dropvoiture.requestFocus();
 
 					}
 
@@ -548,9 +663,9 @@ public class vendeur_commande {
 		btnUpdate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				String marque, modele, capacite, couleur, prix, quantite, nom_vendeur,id, carburant, transmission, option_ref, pays, lieu, statue;
-				marque = txtmarque.getText();
-				modele = txtmodele.getText();
+				String voiture, capacite, couleur, prix, quantite, nom_vendeur,id, carburant, transmission, option_ref, pays, lieu, statue, date;
+
+				voiture = dropvoiture.getSelectedItem().toString();
 				capacite = txtcapacite.getText();
 				transmission = droptrans.getSelectedItem().toString();
 				carburant = dropcarbu.getSelectedItem().toString();
@@ -562,30 +677,30 @@ public class vendeur_commande {
 				quantite = txtquantite.getText();
 				nom_vendeur = txtvendeur.getText();
 				statue = dropstatue.getSelectedItem().toString();
+				date = txtdate.getText();
 				id  = txtid.getText();
 
 				try {
-					pst = con.prepareStatement("update vendeur_commande set marque= ?,modele= ?,capacite= ?,transmission= ?,carburant= ?,couleur= ?,pays= ?,option_ref= ?,lieu= ?,prix= ?,quantite= ?,nom_vendeur= ?,statue= ? where id =?");
-					pst.setString(1, marque);
-					pst.setString(2, modele);
-					pst.setString(3, capacite);
-					pst.setString(4, transmission);
-					pst.setString(5, carburant);
-					pst.setString(6, couleur);
-					pst.setString(7, pays);
-					pst.setString(8, option_ref);
-					pst.setString(9, lieu);
-					pst.setString(10, prix);
-					pst.setString(11, quantite);
-					pst.setString(12, nom_vendeur);
-					pst.setString(13, statue);
+					pst = con.prepareStatement("update vendeur_commande set voiture=?,capacite= ?,transmission= ?,carburant= ?,couleur= ?,pays= ?,option_ref= ?,lieu= ?,prix= ?,quantite= ?,nom_vendeur= ?,statue= ?, date=? where id =?");
+					pst.setString(1, voiture);
+					pst.setString(2, capacite);
+					pst.setString(3, transmission);
+					pst.setString(4, carburant);
+					pst.setString(5, couleur);
+					pst.setString(6, pays);
+					pst.setString(7, option_ref);
+					pst.setString(8, lieu);
+					pst.setString(9, prix);
+					pst.setString(10, quantite);
+					pst.setString(11, nom_vendeur);
+					pst.setString(12, statue);
+					pst.setString(13, date);
 					pst.setString(14, id);
 					pst.executeUpdate();
 					JOptionPane.showMessageDialog(null, "Record Updated!");
 					table_load();
 
-					txtmarque.setText("");
-					txtmodele.setText("");
+					dropvoiture.setSelectedItem("");
 					txtcapacite.setText("");
 					droptrans.setSelectedItem("");
 					dropcarbu.setSelectedItem("");
@@ -597,7 +712,8 @@ public class vendeur_commande {
 					txtquantite.setText("");
 					txtvendeur.setText("");
 					dropstatue.setSelectedItem("");
-					txtmarque.requestFocus();
+					txtdate.setText("");
+					dropvoiture.requestFocus();
 				}
 
 				catch (SQLException e1) {
@@ -622,10 +738,12 @@ public class vendeur_commande {
 					pst.executeUpdate();
 					JOptionPane.showMessageDialog(null, "Record Deleted!");
 					count_load();
+					count_load_termine();
+					count_load_encours();
+					count_load_commande();
 					table_load();
 
-					txtmarque.setText("");
-					txtmodele.setText("");
+					dropvoiture.setSelectedItem("");
 					txtcapacite.setText("");
 					droptrans.setSelectedItem("");
 					dropcarbu.setSelectedItem("");
@@ -637,7 +755,8 @@ public class vendeur_commande {
 					txtquantite.setText("");
 					txtvendeur.setText("");
 					dropstatue.setSelectedItem("");
-					txtmarque.requestFocus();
+					txtdate.setText("");
+					dropvoiture.requestFocus();
 				}
 
 				catch (SQLException e1) {
@@ -650,11 +769,29 @@ public class vendeur_commande {
 		frame.getContentPane().add(btnDelete);
 		
 		lblNoCommande = new JLabel();
-		lblNoCommande.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblNoCommande.setBounds(1278, 650, 252, 31);
+		lblNoCommande.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		lblNoCommande.setBounds(1289, 638, 252, 31);
 		frame.getContentPane().add(lblNoCommande);
-
-	}
+		
+		lblNoVente = new JLabel();
+		lblNoVente.setText("Total vente :0");
+		lblNoVente.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		lblNoVente.setBounds(1027, 688, 252, 31);
+		frame.getContentPane().add(lblNoVente);
+		
+		lblNoCommandeEn = new JLabel();
+		lblNoCommandeEn.setText("Total commande en cours :0");
+		lblNoCommandeEn.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		lblNoCommandeEn.setBounds(1027, 638, 252, 31);
+		frame.getContentPane().add(lblNoCommandeEn);
+		
+		lblTotalCommandeDeja = new JLabel();
+		lblTotalCommandeDeja.setText("Total commande deja passe :0");
+		lblTotalCommandeDeja.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		lblTotalCommandeDeja.setBounds(1027, 662, 252, 31);
+		frame.getContentPane().add(lblTotalCommandeDeja);
+		
 	
 
+	}
 }

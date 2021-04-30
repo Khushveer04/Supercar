@@ -76,7 +76,6 @@ public class vendeur_entrepot {
 		  } 
 	    }
 	 
-	
 
 	/**
 	 * Initialise the contents of the frame.
