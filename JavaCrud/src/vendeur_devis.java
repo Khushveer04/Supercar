@@ -524,7 +524,7 @@ public class vendeur_devis {
 		frame.getContentPane().add(btnClear);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(500, 68, 847, 539);
+		scrollPane.setBounds(500, 96, 847, 511);
 		frame.getContentPane().add(scrollPane);
 		
 		table = new JTable();
@@ -537,7 +537,7 @@ public class vendeur_devis {
 		panel_1.setLayout(null);
 		
 		JLabel lblBookId = new JLabel("ID");
-		lblBookId.setBounds(30, 38, 60, 17);
+		lblBookId.setBounds(30, 57, 60, 17);
 		lblBookId.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_1.add(lblBookId);
 		
@@ -607,9 +607,14 @@ public class vendeur_devis {
 			        }
 			}
 		});
-		txtid.setBounds(102, 36, 278, 22);
+		txtid.setBounds(106, 57, 278, 22);
 		txtid.setColumns(10);
 		panel_1.add(txtid);
+		
+		JLabel lblSelectionnerLidentifiantDe = new JLabel("SELECTIONNER L'IDENTIFIANT DE LA VOITURE VOULU");
+		lblSelectionnerLidentifiantDe.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblSelectionnerLidentifiantDe.setBounds(30, 20, 354, 27);
+		panel_1.add(lblSelectionnerLidentifiantDe);
 				
 				JLabel lblNewLabel = new JLabel("CREATION DEVIS");
 				lblNewLabel.setBounds(579, -12, 401, 79);
@@ -626,5 +631,10 @@ public class vendeur_devis {
 				});
 				btnTable.setBounds(1099, 623, 113, 50);
 				frame.getContentPane().add(btnTable);
+				
+				JLabel lblStockDesVoitures = new JLabel("STOCK DES VOITURES");
+				lblStockDesVoitures.setFont(new Font("Tahoma", Font.PLAIN, 16));
+				lblStockDesVoitures.setBounds(858, 59, 186, 27);
+				frame.getContentPane().add(lblStockDesVoitures);
 			}
 }

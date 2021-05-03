@@ -472,6 +472,68 @@ public class vendeur_client {
 				id  = txtid.getText();
 				
 				 try {
+					 
+					 final String NOM_REGEX = "^[A-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$";
+					 
+					    final Pattern NOM_PATTERN = Pattern.compile(NOM_REGEX);
+					    
+					    final String PRENOM_REGEX = "^[A-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$";
+					 
+					    final Pattern PRENOM_PATTERN = Pattern.compile(PRENOM_REGEX);
+					    
+					    final String ADRESSE_REGEX = "^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z][0-9]*)*$";
+					    
+					    final Pattern ADRESSE_PATTERN = Pattern.compile(ADRESSE_REGEX);
+					    
+					    final String EMAIL_REGEX = "^\\w+([.-]?\\w+)*@\\w+([.-]?\\w+)*(\\.\\w{2,3})+$";
+					    
+					    final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX);
+					    
+					    final String NUMERO_TELEPHONE_REGEX = "^[0-9]{8}$";
+						 
+					    final Pattern NUMERO_TELEPHONE_PATTERN = Pattern.compile(NUMERO_TELEPHONE_REGEX);
+					    
+					    final String NUM_ID_REGEX = "^[A-Z]+[0-9]{12}+[A-Z]$";
+						 
+					    final Pattern NUM_ID_PATTERN = Pattern.compile(NUM_ID_REGEX);
+					    
+					   
+					    
+					    if (NOM_PATTERN.matcher(nom).matches() == false) {
+					    	JOptionPane.showMessageDialog(null, "L`insertion du nom n`est pas bon");
+					    }
+					    
+					    if(PRENOM_PATTERN.matcher(prenom).matches()  == false) {
+					    	JOptionPane.showMessageDialog(null, "L`insertion du prenom n`est pas bon");
+					    }
+					    
+					    if (sex.equals("")) {
+					    	JOptionPane.showMessageDialog(null, "L`insertion du sex n'est pas bon");
+					    }
+					    
+					    if( ADRESSE_PATTERN.matcher(adresse).matches()  == false) {
+					    	JOptionPane.showMessageDialog(null, "L`insertion de l'adresse n`est pas bon");
+					    }
+					    
+					    if( EMAIL_PATTERN.matcher(email).matches() == false) {
+					    	JOptionPane.showMessageDialog(null, "L`insertion de l'email n`est pas bon");
+					    }
+					    
+					    if( NUMERO_TELEPHONE_PATTERN.matcher(numero_telephone).matches()  == false) {
+					    	JOptionPane.showMessageDialog(null, "L`insertion du numero telephone n`est pas bon");
+					    }
+					    
+					    if( NUM_ID_PATTERN.matcher(num_id).matches()  == false) {
+					    	JOptionPane.showMessageDialog(null, "L`insertion du NIC n`est pas bon");
+					    }
+					 
+					 	if (NOM_PATTERN.matcher(nom).matches()&&
+								PRENOM_PATTERN.matcher(prenom).matches() && !sex.equals("") &&
+				                ADRESSE_PATTERN.matcher(adresse).matches()&&
+				                EMAIL_PATTERN.matcher(email).matches()&&
+				                NUMERO_TELEPHONE_PATTERN.matcher(numero_telephone).matches() && 
+				                NUM_ID_PATTERN.matcher(num_id).matches()) 
+						{
 						pst = con.prepareStatement("update vendeur_client set nom= ?,prenom=?,sex=?,adresse= ?,email=?,numero_telephone=?,num_id=? where id =?");
 						pst.setString(1, nom);
 			            pst.setString(2, prenom);
@@ -483,6 +545,7 @@ public class vendeur_client {
 			            pst.setString(8, id);
 			            pst.executeUpdate();
 			            JOptionPane.showMessageDialog(null, "Mise a jour completer!");
+						}
 			            table_load();
 			           
 			            txtnom.setText("");
