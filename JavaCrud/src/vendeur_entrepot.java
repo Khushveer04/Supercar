@@ -13,6 +13,7 @@ import javax.swing.JScrollPane;
 
 public class vendeur_entrepot {
 
+	//INITIALISATION DES VARIABLES
 	private JFrame frame;
 	private JTable table;
 
@@ -45,7 +46,7 @@ public class vendeur_entrepot {
 	PreparedStatement pst;
 	ResultSet rs;
 
- 
+ //CONNEXION A LA BASE DE DONNEE
 	 public void Connect()
 	    {
 	        try {
@@ -62,6 +63,7 @@ public class vendeur_entrepot {
 	        }
 	    }
 	 
+	 //SELECTION DE L'AFFICHAGE POUR LA TABLE
 	  public void table_load()
 	    {
 	    	try 

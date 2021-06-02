@@ -22,8 +22,15 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.JComboBox;
 
+/**
+ * 
+ * @author Khushveer
+ *
+ */
+
 public class vendeur_client {
 
+	//Initialisation des variables
 	private JFrame frame;
 	private JTextField txtnom;
 	private JTextField txtprenom;
@@ -37,11 +44,11 @@ public class vendeur_client {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	public static void main(String login) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					vendeur_client window = new vendeur_client();
+					vendeur_client window = new vendeur_client(login);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -53,8 +60,8 @@ public class vendeur_client {
 	/**
 	 * Create the application.
 	 */
-	public vendeur_client() {
-		initialize();
+	public vendeur_client(String login) {
+		initialize(login);
 		Connect();
 		table_load();
 	}
@@ -63,6 +70,8 @@ public class vendeur_client {
 	PreparedStatement pst;
 	ResultSet rs;
  
+	
+	//Connexion a la base de donnee.
 	 public void Connect()
 	    {
 	        try {
@@ -79,6 +88,8 @@ public class vendeur_client {
 	        }
 	    }
 	 
+	 
+	 // Affichage des donnee de la table vendeur_client
 	  public void table_load()
 	    {
 	    	try 
@@ -93,7 +104,7 @@ public class vendeur_client {
 	    	 } 
 	    }
 	  
-	  //Junit test
+	  //Junit test sur le nom inserer
 	  
 	  public static String testNom(String nom) {
 		  final String NOM_REGEX = "^[A-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$";
@@ -116,7 +127,10 @@ public class vendeur_client {
 	 * Initialise the contents of the frame.
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void initialize() {
+	private void initialize(String login) {
+		AdminAccount account = new AdminAccount();
+		account.DatabaseConnexion(login, null, null, frame);
+		System.out.print(account.getId());
 		frame = new JFrame();
 		frame.setBounds(100, 100, 1206, 591);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -206,6 +220,8 @@ public class vendeur_client {
 		dropsex.addItem("Homme");
 		dropsex.addItem("Femme");
 		
+		//Boutton creation
+		
 		JButton btnNewButton = new JButton("Creation");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
@@ -219,6 +235,8 @@ public class vendeur_client {
 				numero_telephone = txttelephone.getText();
 				num_id = txtnumid.getText();
 				
+				
+				// REGEX POUR LES VALEURS INSERER
 					 
 					 try {
 						 
@@ -246,7 +264,7 @@ public class vendeur_client {
 							 
 						    final Pattern NUM_ID_PATTERN = Pattern.compile(NUM_ID_REGEX);
 						    
-						   
+						// LES MESSAGES D'ERREURS   
 						    
 						    if (NOM_PATTERN.matcher(nom).matches() == false) {
 						    	JOptionPane.showMessageDialog(null, "L`insertion du nom n`est pas bon");
@@ -276,6 +294,7 @@ public class vendeur_client {
 						    	JOptionPane.showMessageDialog(null, "L`insertion du NIC n`est pas bon");
 						    }
 						   
+					// LA CONDITION POUR POUVOIR INSERER LES DONNEES.
 							
 							if (NOM_PATTERN.matcher(nom).matches()&&
 									PRENOM_PATTERN.matcher(prenom).matches() && !sex.equals("") &&
@@ -285,7 +304,7 @@ public class vendeur_client {
 					                NUM_ID_PATTERN.matcher(num_id).matches()) 
 							{
 								
-						 
+					//L'INSERTION DES DONNEES	 
 						 
 						pst = con.prepareStatement("insert into vendeur_client(nom,prenom,sex,adresse,email,numero_telephone,num_id)values(?,?,?,?,?,?,?)");
 						pst.setString(1, nom);
@@ -297,7 +316,7 @@ public class vendeur_client {
 						pst.setString(7, num_id);
 						pst.executeUpdate();
 						
-						JOptionPane.showMessageDialog(null, "Record Addedddd!!!!!");
+						JOptionPane.showMessageDialog(null, "Enregistrement ajoute !");
 							}	
 							
 						table_load();
@@ -326,11 +345,18 @@ public class vendeur_client {
 		JButton btnExit = new JButton("Sortir");
 		btnExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
+				int dialogButton = JOptionPane.YES_NO_OPTION;
+				int dialogResult = JOptionPane.showConfirmDialog(null, "Souhaitez-vous quitter la page 'Client'?", "Warning",dialogButton);
+				if (dialogResult == JOptionPane.YES_OPTION) {
+				vendeur_client.this.frame.setVisible(false);
+				login_connection.main(login);
+				}
 			}
 		});
 		btnExit.setBounds(1069, 472, 107, 50);
 		frame.getContentPane().add(btnExit);
+		
+		//POUR EFFACER LES DONNEES ECRITE
 		
 		JButton btnClear = new JButton("Effacer");
 		btnClear.addActionListener(new ActionListener() {
@@ -372,9 +398,8 @@ public class vendeur_client {
 			public void keyReleased(KeyEvent e) {
 				
 				 try {
-			          
 			            String id = txtid.getText();
-
+			            //AFFICHAGE DES DONNEES
 			                pst = con.prepareStatement("select nom,prenom,sex,adresse,email,numero_telephone,num_id from vendeur_client where id = ?");
 			                pst.setString(1, id);
 			                ResultSet rs = pst.executeQuery();
@@ -434,6 +459,8 @@ public class vendeur_client {
                 String id;
 			id  = txtid.getText();
 			
+			//SUPPRESSION DES DONNEES
+			
 			 try {
 					pst = con.prepareStatement("delete from vendeur_client where id =?");
 			
@@ -473,6 +500,8 @@ public class vendeur_client {
 				
 				 try {
 					 
+					 //REGEX POUR LES INSERTIONS
+					 
 					 final String NOM_REGEX = "^[A-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$";
 					 
 					    final Pattern NOM_PATTERN = Pattern.compile(NOM_REGEX);
@@ -497,7 +526,7 @@ public class vendeur_client {
 						 
 					    final Pattern NUM_ID_PATTERN = Pattern.compile(NUM_ID_REGEX);
 					    
-					   
+					   //LES MESSAGES ERREURS
 					    
 					    if (NOM_PATTERN.matcher(nom).matches() == false) {
 					    	JOptionPane.showMessageDialog(null, "L`insertion du nom n`est pas bon");
@@ -527,6 +556,8 @@ public class vendeur_client {
 					    	JOptionPane.showMessageDialog(null, "L`insertion du NIC n`est pas bon");
 					    }
 					 
+					    //LES CONDITIONS POUR LA MISE A JOUR
+					    
 					 	if (NOM_PATTERN.matcher(nom).matches()&&
 								PRENOM_PATTERN.matcher(prenom).matches() && !sex.equals("") &&
 				                ADRESSE_PATTERN.matcher(adresse).matches()&&

@@ -11,6 +11,12 @@ import net.proteanit.sql.DbUtils;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 
+/**
+ * 
+ * @author Khushveer
+ *
+ */
+
 public class table_devis {
 
 	private JFrame frame;
@@ -45,7 +51,8 @@ public class table_devis {
 	PreparedStatement pst;
 	ResultSet rs;
 
- 
+	// Connexion a la base de donnee.
+	
 	 public void Connect()
 	    {
 	        try {
@@ -61,6 +68,8 @@ public class table_devis {
 	        	 
 	        }
 	    }
+	 
+	 //SQL pour lister les donnees de la table vendeur_devis.
 	 
 	  public void table_load()
 	    {

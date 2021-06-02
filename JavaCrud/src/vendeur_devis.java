@@ -32,8 +32,16 @@ import java.io.FileOutputStream;
 
 import javax.swing.JFileChooser;
 
+/**
+ * 
+ * @author Khushveer
+ *
+ */
+
 public class vendeur_devis {
 
+	//INITIALISATION DES VARIABLES
+	
 	private JFrame frame;
 	private JTable table;
 	private JTextField txtid;
@@ -41,11 +49,12 @@ public class vendeur_devis {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	
+	public static void main(String login) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					vendeur_devis window = new vendeur_devis();
+					vendeur_devis window = new vendeur_devis(login);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -57,8 +66,8 @@ public class vendeur_devis {
 	/**
 	 * Create the application.
 	 */
-	public vendeur_devis() {
-		initialize();
+	public vendeur_devis(String login) {
+		initialize(login);
 		Connect();
 		table_load();
 	}
@@ -79,6 +88,8 @@ public class vendeur_devis {
 	private JTextField txtquantite;
 	private JTextField txtstatue;
  
+	
+	//CONNEXION A LA BASE DE DONNEE
 	 public void Connect()
 	    {
 	        try {
@@ -94,6 +105,8 @@ public class vendeur_devis {
 	        	 
 	        }
 	    }
+	 
+	 //AFFICHAGE DES DONNEES SUR LA TABLE
 	 
 	  public void table_load()
 	    {
@@ -113,7 +126,10 @@ public class vendeur_devis {
 	/**
 	 * Initialise the contents of the frame.
 	 */
-	private void initialize() {
+	private void initialize(String login) {
+		AdminAccount account = new AdminAccount();
+		account.DatabaseConnexion(login, null, null, frame);
+		System.out.print(account.getId());
 		frame = new JFrame();
 		frame.setBounds(100, 100, 1371, 731);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -255,6 +271,7 @@ public class vendeur_devis {
 		lblStatue.setBounds(24, 367, 99, 33);
 		panel.add(lblStatue);
 		
+		//BOUTTON CREATION
 		
 		JButton btnNewButton = new JButton("Creation");
 		btnNewButton.addActionListener(new ActionListener() {
@@ -274,7 +291,7 @@ public class vendeur_devis {
 				statue = txtstatue.getText();
 				nom_client = txtnomclient.getText();
 				
-							
+							//REGEX POUR LES INSERTIONS
 				 try {
 					 
 					 
@@ -367,6 +384,7 @@ public class vendeur_devis {
 					int val2 = Integer.parseInt(txtprix.getText());
 					int total = val1 * val2;			
 					
+					//COMPARAISON POUR POUVOIR INSERER LES DONNEES
 					
 					if (NOM_CLIENT_PATTERN.matcher(nom_client).matches() && MARQUE_PATTERN.matcher(marque).matches() && MODELE_PATTERN.matcher(modele).matches() && COULEUR_PATTERN.matcher(couleur).matches()
 							&& CAPACITE_PATTERN.matcher(capacite).matches() && CARBURANT_PATTERN.matcher(carburant).matches() && TRANSMISSION_PATTERN.matcher(transmission).matches() && OPTION_PATTERN.matcher(option_ref).matches()
@@ -374,7 +392,7 @@ public class vendeur_devis {
 							&& STATUE_PATTERN.matcher(statue).matches()) 
 					{
 					 
-					 
+					//L'INSERTION DES DONNEES 
 					pst = con.prepareStatement("insert into vendeur_devis(nom_client,marque,modele,capacite,transmission,carburant,couleur,pays,option_ref,prix,quantite,statue)values(?,?,?,?,?,?,?,?,?,?,?,?)");
 					pst.setString(1, nom_client);
 					pst.setString(2, marque);
@@ -389,7 +407,7 @@ public class vendeur_devis {
 					pst.setString(11, quantite);
 					pst.setString(12, statue);
 					pst.executeUpdate();
-					JOptionPane.showMessageDialog(null, "Record Added!");
+					JOptionPane.showMessageDialog(null, "Ajout reussi !");
 					
 					nom_client = txtnomclient.getText();
 					marque = txtmarque.getText();
@@ -404,6 +422,7 @@ public class vendeur_devis {
 					quantite = txtquantite.getText();
 					statue = txtstatue.getText();
 	
+					// FICHIER PDF
 					
 					JFileChooser dialog = new JFileChooser();
 					dialog.setSelectedFile(new File(nom_client+"_FicheDevis"+".pdf"));
@@ -496,7 +515,12 @@ public class vendeur_devis {
 		JButton btnExit = new JButton("Sortir");
 		btnExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
+				int dialogButton = JOptionPane.YES_NO_OPTION;
+				int dialogResult = JOptionPane.showConfirmDialog(null, "Souhaitez-vous quitter la page 'Devis'?", "Warning",dialogButton);
+				if (dialogResult == JOptionPane.YES_OPTION) {
+				vendeur_devis.this.frame.setVisible(false);
+				login_connection.main(login);
+				}
 			}
 		});
 		btnExit.setBounds(744, 623, 107, 50);
@@ -547,7 +571,7 @@ public class vendeur_devis {
 			public void keyReleased(KeyEvent e) {
 				
 				 try {
-			          
+			          //SELECTION DES DONNEES SUR LA PAGE VOITURE
 			            String id = txtid.getText();
 
 			                pst = con.prepareStatement("select * from voitures where id = ?");

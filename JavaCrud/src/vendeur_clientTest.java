@@ -7,9 +7,9 @@ import java.util.regex.Pattern;
 
 import org.junit.jupiter.api.Test;
 
+// JUNIT TEST SUR LE PRENOM DU CLIENT
 
-
-class testPrenom {
+class vendeur_clientTest {
 
 @Test
 void test() {

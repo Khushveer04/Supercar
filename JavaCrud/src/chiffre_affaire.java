@@ -1,5 +1,7 @@
 import java.awt.EventQueue;
 
+
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
@@ -23,6 +25,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JComboBox;
 import javax.swing.SwingConstants;
+
+/**
+ * 
+ * @author Khushveer
+ *
+ */
+//
 
 public class chiffre_affaire {
 
@@ -52,7 +61,9 @@ public class chiffre_affaire {
 	PreparedStatement pst;
 	ResultSet rs;
 	private JTable table;
-
+	
+	//Connection de la base de donnee.
+	
 	public void Connect() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -63,6 +74,8 @@ public class chiffre_affaire {
 
 		}
 	}
+	
+	// Calcul du prix d'une date specific: Jour
 
 	public void table_load(String type) {
 		if (type == "jour") {
@@ -81,6 +94,10 @@ public class chiffre_affaire {
 				e.printStackTrace();
 			}
 		}
+		
+		
+		// Calcul du prix d'une date specific: Mois
+		
 		if (type == "mois") {
 			try {
 				pst = con.prepareStatement(
@@ -98,6 +115,9 @@ public class chiffre_affaire {
 				e.printStackTrace();
 			}
 		}
+		
+		// Calcul du prix d'une date specific: Annee
+		
 		if (type == "annee") {
 			try {
 				pst = con.prepareStatement("select SUM(prix * quantite) AS Total from vendeur_commande where year(date) = year(?)");
@@ -174,6 +194,8 @@ public class chiffre_affaire {
 		comboBox.addItem("jour");
 		comboBox.addItem("mois");
 		comboBox.addItem("annee");
+		
+		//Insertion des donnees.
 
 		JLabel lblEntrezUneDate = new JLabel("Entrez une date (aaaa-mm-jj)");
 		lblEntrezUneDate.setHorizontalAlignment(SwingConstants.CENTER);
