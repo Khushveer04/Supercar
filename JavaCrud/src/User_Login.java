@@ -65,13 +65,13 @@ public class User_Login {
 		lblTitle.setBounds(198, 13, 249, 64);
 		frame.getContentPane().add(lblTitle);
 
-		JLabel lblLogin = new JLabel("Mail");
+		JLabel lblLogin = new JLabel("Login");
 		lblLogin.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		lblLogin.setHorizontalAlignment(SwingConstants.CENTER);
 		lblLogin.setBounds(40, 115, 88, 33);
 		frame.getContentPane().add(lblLogin);
 
-		JLabel lblPwd = new JLabel("Password");
+		JLabel lblPwd = new JLabel("Mot de passe");
 		lblPwd.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPwd.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		lblPwd.setBounds(46, 189, 112, 32);

@@ -173,7 +173,7 @@ public class login_connection {
 				}
 			});
 			btnStock.setFont(new Font("Dialog", Font.BOLD, 16));
-			btnStock.setBounds(386, 285, 217, 90);
+			btnStock.setBounds(388, 186, 217, 90);
 			frame.getContentPane().add(btnStock);
 			
 			JButton btnCommande = new JButton("Commande");
@@ -186,6 +186,17 @@ public class login_connection {
 			btnCommande.setFont(new Font("Dialog", Font.BOLD, 16));
 			btnCommande.setBounds(704, 186, 217, 90);
 			frame.getContentPane().add(btnCommande);
+			
+			JButton btnChiffreDaffaire = new JButton("Chiffre d'affaire");
+			btnChiffreDaffaire.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					login_connection.this.frame.setVisible(false);
+					chiffre_affaire.main(login);
+				}
+			});
+			btnChiffreDaffaire.setFont(new Font("Dialog", Font.BOLD, 16));
+			btnChiffreDaffaire.setBounds(388, 367, 217, 90);
+			frame.getContentPane().add(btnChiffreDaffaire);
 		
 		}
 		
@@ -405,6 +416,8 @@ public class login_connection {
 		
 		btnLogOut.setBounds(940, 599, 122, 46);
 		frame.getContentPane().add(btnLogOut);
+		
+		
 		
 		
 		

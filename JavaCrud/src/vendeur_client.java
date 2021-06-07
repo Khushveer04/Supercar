@@ -10,7 +10,6 @@ import java.awt.Font;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
-import net.proteanit.sql.DbUtils;
 
 import javax.swing.JTextField;
 import javax.swing.JButton;
@@ -21,6 +20,9 @@ import javax.swing.JScrollPane;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.JComboBox;
+
+import javax.swing.table.DefaultTableModel;
+import javax.crypto.SecretKey;
 
 /**
  * 
@@ -88,21 +90,87 @@ public class vendeur_client {
 	        }
 	    }
 	 
-	 
-	 // Affichage des donnee de la table vendeur_client
-	  public void table_load()
-	    {
-	    	try 
-	    	{
-		    pst = con.prepareStatement("select * from vendeur_client");
-		    rs = pst.executeQuery();
-		    table.setModel(DbUtils.resultSetToTableModel(rs));
-	    	} 
-	    	catch (SQLException e) 
-	    	 {
-	    		e.printStackTrace();
-	    	 } 
-	    }
+//	 
+//	 // Affichage des donnee de la table vendeur_client
+//	  public void table_load()
+//	    {
+//	    	try 
+//	    	{
+//		    pst = con.prepareStatement("select * from vendeur_client");
+//		    rs = pst.executeQuery();
+//		    table.setModel(DbUtils.resultSetToTableModel(rs));
+//	    	} 
+//	    	catch (SQLException e) 
+//	    	 {
+//	    		e.printStackTrace();
+//	    	 } 
+//	    }
+	  
+	  /**
+	  * Decryptage Blowfish + cle
+	  * @param banque
+	  * @return
+	  */
+	  public String Decrypt_Banque(String banque) {
+//	  if (account.getAccountType().contains("RH")) {
+	  SecretKey key;
+	  try {
+	  key = ApiBlowFish.decryptKey();
+	  banque = ApiBlowFish.decryptInString(banque, key);
+	  } catch (Exception e) {
+	  e.printStackTrace();
+	  //}
+	  }
+	  return banque;
+	  }
+
+
+	  /**
+	  * Encrypt Blowfish + cle
+	  * @param banque
+	  * @return
+	  */
+	  public String Encrpyt_Banque(String banque) {
+	  SecretKey key;
+	  try {
+	  key = ApiBlowFish.decryptKey();
+	  banque = ApiBlowFish.encryptInString(banque, key);
+	  } catch (Exception e) {
+	  e.printStackTrace();
+	  }
+
+	   return banque;
+	  }
+	  
+	  public void table_load() {
+		  try {
+		  pst = con.prepareStatement("select * from vendeur_client");
+		  rs = pst.executeQuery();
+
+		   DefaultTableModel tableModel = new DefaultTableModel(new Object[][] {},
+		  new String[] { "id", "nom", "prenom", "sex", "adresse", "email", "numero_telephone", "num_id" });
+
+		   while (rs.next()) {
+		  String id = rs.getString("id");
+		  String nom = rs.getString("nom");
+		  String prenom = rs.getString("prenom");
+		  String sex = rs.getString("sex");
+		  String adresse = rs.getString("adresse");
+		  String email = rs.getString("email");
+		  String numero_telephone = rs.getString("numero_telephone");
+		  String num_id = Decrypt_Banque(rs.getString("num_id"));
+
+		   String[] data = { id, nom, prenom, sex, adresse, email, numero_telephone, num_id };
+		  tableModel.addRow(data);
+
+		   }
+		  table.setModel(tableModel);
+
+		   table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+		  } catch (Exception e) {
+		  e.printStackTrace();
+		  }
+		  }
 	  
 	  //Junit test sur le nom inserer
 	  
@@ -233,7 +301,7 @@ public class vendeur_client {
 				adresse = txtadresse.getText();
 				email = txtemail.getText();
 				numero_telephone = txttelephone.getText();
-				num_id = txtnumid.getText();
+				num_id = Encrpyt_Banque(txtnumid.getText());
 				
 				
 				// REGEX POUR LES VALEURS INSERER
@@ -290,9 +358,10 @@ public class vendeur_client {
 						    	JOptionPane.showMessageDialog(null, "L`insertion du numero telephone n`est pas bon");
 						    }
 						    
-						    if( NUM_ID_PATTERN.matcher(num_id).matches()  == false) {
+						    
+						    if (NUM_ID_PATTERN.matcher(Decrypt_Banque(num_id)).matches() == false) {
 						    	JOptionPane.showMessageDialog(null, "L`insertion du NIC n`est pas bon");
-						    }
+						    	}
 						   
 					// LA CONDITION POUR POUVOIR INSERER LES DONNEES.
 							
@@ -301,7 +370,7 @@ public class vendeur_client {
 					                ADRESSE_PATTERN.matcher(adresse).matches()&&
 					                EMAIL_PATTERN.matcher(email).matches()&&
 					                NUMERO_TELEPHONE_PATTERN.matcher(numero_telephone).matches() && 
-					                NUM_ID_PATTERN.matcher(num_id).matches()) 
+					                NUM_ID_PATTERN.matcher(Decrypt_Banque(num_id)).matches())
 							{
 								
 					//L'INSERTION DES DONNEES	 
@@ -413,7 +482,7 @@ public class vendeur_client {
 			                String adresse = rs.getString(4);
 			                String email = rs.getString(5);
 			                String numero_telephone = rs.getString(6);
-			                String num_id = rs.getString(7);
+			                String num_id = Decrypt_Banque(rs.getString(7));
 			                
 			                txtnom.setText(nom);
 			                txtprenom.setText(prenom);
@@ -495,7 +564,7 @@ public class vendeur_client {
 				adresse = txtadresse.getText();
 				email = txtemail.getText();
 				numero_telephone = txttelephone.getText();
-				num_id = txtnumid.getText();
+				num_id = Encrpyt_Banque(txtnumid.getText());
 				id  = txtid.getText();
 				
 				 try {
@@ -563,7 +632,7 @@ public class vendeur_client {
 				                ADRESSE_PATTERN.matcher(adresse).matches()&&
 				                EMAIL_PATTERN.matcher(email).matches()&&
 				                NUMERO_TELEPHONE_PATTERN.matcher(numero_telephone).matches() && 
-				                NUM_ID_PATTERN.matcher(num_id).matches()) 
+				                NUM_ID_PATTERN.matcher(Decrypt_Banque(num_id)).matches()) 
 						{
 						pst = con.prepareStatement("update vendeur_client set nom= ?,prenom=?,sex=?,adresse= ?,email=?,numero_telephone=?,num_id=? where id =?");
 						pst.setString(1, nom);

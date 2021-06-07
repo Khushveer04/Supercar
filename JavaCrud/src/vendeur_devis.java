@@ -121,6 +121,8 @@ public class vendeur_devis {
 	    		e.printStackTrace();
 		  } 
 	    }
+	  
+	  
 	
 
 	/**

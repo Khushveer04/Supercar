@@ -44,11 +44,11 @@ public class chiffre_affaire {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	public static void main(String login) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					chiffre_affaire window = new chiffre_affaire();
+					chiffre_affaire window = new chiffre_affaire(login);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -139,16 +139,18 @@ public class chiffre_affaire {
 	/**
 	 * Create the application.
 	 */
-	public chiffre_affaire() {
+	public chiffre_affaire(String login) {
 		Connect();
-		initialize();
+		initialize(login);
 	}
 
 	/**
 	 * Initialise the contents of the frame.
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void initialize() {
+	private void initialize(String login) {
+		AdminAccount account = new AdminAccount();
+		account.DatabaseConnexion(login, null, null, frame);
 		frame = new JFrame();
 		frame.setBounds(100, 100, 749, 731);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -211,5 +213,19 @@ public class chiffre_affaire {
 		lblLeChiffreDaffaire.setHorizontalAlignment(SwingConstants.CENTER);
 		lblLeChiffreDaffaire.setBounds(110, 273, 216, 16);
 		panel.add(lblLeChiffreDaffaire);
+		
+		JButton btnSortir = new JButton("Sortir");
+		btnSortir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int dialogButton = JOptionPane.YES_NO_OPTION;
+				int dialogResult = JOptionPane.showConfirmDialog(null, "Souhaitez-vous quitter la page 'Client'?", "Warning",dialogButton);
+				if (dialogResult == JOptionPane.YES_OPTION) {
+				chiffre_affaire.this.frame.setVisible(false);
+				login_connection.main(login);
+				}
+			}
+		});
+		btnSortir.setBounds(281, 324, 99, 26);
+		panel.add(btnSortir);
 	}
 }
