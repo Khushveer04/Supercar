@@ -112,14 +112,13 @@ public class vendeur_client {
 	  * @return
 	  */
 	  public String Decrypt_Banque(String banque) {
-//	  if (account.getAccountType().contains("RH")) {
+//	
 	  SecretKey key;
 	  try {
 	  key = ApiBlowFish.decryptKey();
 	  banque = ApiBlowFish.decryptInString(banque, key);
 	  } catch (Exception e) {
 	  e.printStackTrace();
-	  //}
 	  }
 	  return banque;
 	  }

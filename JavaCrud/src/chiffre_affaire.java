@@ -209,7 +209,7 @@ public class chiffre_affaire {
 		lblFaitesVotreChoix.setBounds(229, 69, 216, 16);
 		panel.add(lblFaitesVotreChoix);
 		
-		JLabel lblLeChiffreDaffaire = new JLabel("Le chiffre d'affaire est : ");
+		JLabel lblLeChiffreDaffaire = new JLabel("Le chiffre d'affaires est : ");
 		lblLeChiffreDaffaire.setHorizontalAlignment(SwingConstants.CENTER);
 		lblLeChiffreDaffaire.setBounds(110, 273, 216, 16);
 		panel.add(lblLeChiffreDaffaire);
@@ -218,7 +218,7 @@ public class chiffre_affaire {
 		btnSortir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int dialogButton = JOptionPane.YES_NO_OPTION;
-				int dialogResult = JOptionPane.showConfirmDialog(null, "Souhaitez-vous quitter la page 'Client'?", "Warning",dialogButton);
+				int dialogResult = JOptionPane.showConfirmDialog(null, "Souhaitez-vous quitter la page 'Chiffre d'affaires'?", "Warning",dialogButton);
 				if (dialogResult == JOptionPane.YES_OPTION) {
 				chiffre_affaire.this.frame.setVisible(false);
 				login_connection.main(login);
